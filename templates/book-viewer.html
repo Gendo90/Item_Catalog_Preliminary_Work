@@ -19,7 +19,7 @@
   <div class=container>
     <div class=loggedinheading>
       <!--GHOST DIV FOR SPACING SO HEADER IS CENTERED!-->
-      <button type=button class=header_btn>My Collection</button>
+      <a href={{url_for('listUserBooks', super_category_name=super_category_name, user_id=userID)}}><button type=button class=header_btn>My Collection</button></a>
       <!--<p class=text_blend> Login </p>-->
     </div>
 

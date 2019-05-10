@@ -70,12 +70,13 @@ def mainPage():
     featured_books = []
     featured_genres = []
     featured_categories = []
-    for i in range(6):
+    while(len(featured_books)<=6):
         taken_index = random.randint(0, len(all_books)-1)
-        featured_books.append(all_books.pop(taken_index))
+        if(all_books[taken_index].title not in [book.title for book in featured_books]):
+            featured_books.append(all_books.pop(taken_index))
 
 
-    return render_template('index-logged-in.html', featured=featured_books, length=len(all_books))
+    return render_template('index-logged-in.html', featured=featured_books)
 
 
 # login page for the website

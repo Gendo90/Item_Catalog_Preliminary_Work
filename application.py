@@ -66,17 +66,25 @@ def mainPage():
         login_session['user_id'] = -0.1
 
     all_books = session.query(BookItem).all()
-    #all_images = session.query(BookItem.image_URL).all()
     featured_books = []
     featured_genres = []
     featured_categories = []
+
+    #make the list of BookItems to be featured
     while(len(featured_books)<=6):
         taken_index = random.randint(0, len(all_books)-1)
         if(all_books[taken_index].title not in [book.title for book in featured_books]):
             featured_books.append(all_books.pop(taken_index))
 
+    #get the genre for each book
+    for item in featured_books:
+        featured_genres.append(item.genre.name)
+        featured_categories.append(item.genre.super_category.name)
 
-    return render_template('index-logged-in.html', featured=featured_books)
+
+    return render_template('index-logged-in.html',
+    featured=enumerate(featured_books), genres=featured_genres, 
+    super_cats=featured_categories)
 
 
 # login page for the website

@@ -11,6 +11,9 @@ from flask import session as login_session
 import random
 import string
 
+#import package for cyclical tasks
+import datetime
+
 # import packages for google oauth login
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -39,6 +42,29 @@ session = DBSession()
 
 CustomSearchAPIKEY = "AIzaSyC8gjeQNTOd8EUSKB-A8kCT8JDZaL0zIQM"
 
+#variables to store the featured books of the day!
+current_day = 0
+featured_books = []
+featured_genres = []
+featured_categories = []
+
+#setup 'Featured Books' daily recurring function
+def get_featured_books():
+    all_books = session.query(BookItem).all()
+
+    #make the list of BookItems to be featured
+    while(len(featured_books)<=14):
+        taken_index = random.randint(0, len(all_books)-1)
+        if(all_books[taken_index].title not in [book.title for book in featured_books]):
+            featured_books.append(all_books.pop(taken_index))
+
+    #get the genre and superCategory for each book
+    for item in featured_books:
+        featured_genres.append(item.genre.name)
+        featured_categories.append(item.genre.super_category.name)
+
+    current_day = datetime.date.today()
+
 
 # Main page for the website
 @app.route('/')
@@ -65,24 +91,8 @@ def mainPage():
     except KeyError:
         login_session['user_id'] = -0.1
 
-    all_books = session.query(BookItem).all()
-    featured_books = []
-    featured_genres = []
-    featured_categories = []
-
-    n = len(all_books)
-
-    #make the list of BookItems to be featured
-    while(len(featured_books)<=14):
-        taken_index = random.randint(0, len(all_books)-1)
-        if(all_books[taken_index].title not in [book.title for book in featured_books]):
-            featured_books.append(all_books.pop(taken_index))
-
-    #get the genre for each book
-    for item in featured_books:
-        featured_genres.append(item.genre.name)
-        featured_categories.append(item.genre.super_category.name)
-
+    if(featured_books==[] or current_day!=datetime.date.today()):
+        get_featured_books()
 
     return render_template('index-logged-in.html',
     featured=enumerate(featured_books), genres=featured_genres,

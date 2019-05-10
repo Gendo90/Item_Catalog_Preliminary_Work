@@ -65,7 +65,17 @@ def mainPage():
     except KeyError:
         login_session['user_id'] = -0.1
 
-    return render_template('index-logged-in.html')
+    all_books = session.query(BookItem).all()
+    #all_images = session.query(BookItem.image_URL).all()
+    featured_books = []
+    featured_genres = []
+    featured_categories = []
+    for i in range(6):
+        taken_index = random.randint(0, len(all_books)-1)
+        featured_books.append(all_books.pop(taken_index))
+
+
+    return render_template('index-logged-in.html', featured=featured_books, length=len(all_books))
 
 
 # login page for the website

@@ -433,22 +433,25 @@ def viewPage(super_category_name, genre_name, book_id):
 
     # test to see if the genre name is actually the user name, then route to
     # the 'my collection' page!
-    if(login_session['username']==genre_name):
-        user_id = login_session['user_id']
+    try:
+        if(login_session['username']==genre_name):
+            user_id = login_session['user_id']
 
-        userBooks = session.query(BookItem).join(
-            User, User.id == BookItem.user_id).filter(
-            User.id == user_id).group_by(BookItem.title)
+            userBooks = session.query(BookItem).join(
+                User, User.id == BookItem.user_id).filter(
+                User.id == user_id).group_by(BookItem.title)
 
-        book = session.query(BookItem).filter_by(id=book_id).one()
-        user = session.query(User).filter(User.id==user_id).one()
+            book = session.query(BookItem).filter_by(id=book_id).one()
+            user = session.query(User).filter(User.id==user_id).one()
 
-        return render_template(
-            'user-collection-book-viewer.html',
-            API_KEY=CustomSearchAPIKEY,
-            super_category_name=super_category_name, genre=user.name,
-            genreBooks=userBooks, book=book,
-            author=book.author[0], userID = book.user_id)
+            return render_template(
+                'user-collection-book-viewer.html',
+                API_KEY=CustomSearchAPIKEY,
+                super_category_name=super_category_name, genre=user.name,
+                genreBooks=userBooks, book=book,
+                author=book.author[0], userID = book.user_id)
+    except KeyError:
+        pass
 
     # new plan - get duplicate book titles first, then check book titles vs
     # duplicate book titles, then remove duplicate book titles

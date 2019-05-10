@@ -86,6 +86,7 @@ button.login {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .footer {
@@ -142,6 +143,7 @@ div.sidebar_links {
   margin-top: 10px;
   margin-left: 10px;
   background-color: #a4aaae;
+  overflow-y: auto;
 }
 
 .login_box {

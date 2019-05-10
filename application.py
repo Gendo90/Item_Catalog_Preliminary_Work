@@ -70,8 +70,10 @@ def mainPage():
     featured_genres = []
     featured_categories = []
 
+    n = len(all_books)
+
     #make the list of BookItems to be featured
-    while(len(featured_books)<=6):
+    while(len(featured_books)<=14):
         taken_index = random.randint(0, len(all_books)-1)
         if(all_books[taken_index].title not in [book.title for book in featured_books]):
             featured_books.append(all_books.pop(taken_index))
@@ -83,7 +85,7 @@ def mainPage():
 
 
     return render_template('index-logged-in.html',
-    featured=enumerate(featured_books), genres=featured_genres, 
+    featured=enumerate(featured_books), genres=featured_genres,
     super_cats=featured_categories)
 
 
